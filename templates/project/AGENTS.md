@@ -2,7 +2,7 @@
 
 <!-- ch:managed start -->
 - 작업을 시작하기 전에 반드시 PLAN.md를 끝까지 읽는다.
-- 세션 시작 시 또는 사용자가 새 작업을 지시했을 때, PLAN.md 목표/범위 섹션이 placeholder("(한 줄로 적어주세요)", "할 것 1") 그대로이고 `.codex/skills/audit/`가 설치되어 있으면, 작업 들어가기 전에 "먼저 `/audit`으로 프로젝트 상태 점검할까요?"라고 사용자에게 한 번 묻는다. (사용자가 N 하면 다시 묻지 않음.)
+- 세션 시작 시 또는 사용자가 새 작업을 지시했을 때, PLAN.md 목표/범위 섹션이 placeholder("(한 줄로 적어주세요)", "할 것 1") 그대로이고 `.agents/skills/audit/`가 설치되어 있으면, 작업 들어가기 전에 "먼저 `/audit`으로 프로젝트 상태 점검할까요?"라고 사용자에게 한 번 묻는다. (사용자가 N 하면 다시 묻지 않음.)
 - PLAN.md 범위 안에서만 작업한다. 범위를 벗어나는 일은 먼저 사용자 승인을 받는다.
 - PLAN.md의 "미확정 사항" 중 체크되지 않은 항목은 추측하지 말고 사용자에게 먼저 확인받는다.
 - 확인받은 항목은 PLAN.md에서 체크하고, 받은 답을 그 항목 아래에 한 줄로 기록한다.
@@ -37,7 +37,7 @@
 - Codex는 사용자가 `$cnp` 또는 `$cnp --merge`를 명시적으로 입력하기 전에는 절대로 `git commit`, `git push`, `git merge`를 실행하지 않는다.
 - `/cnp`: 커밋 → 현재 브랜치 origin에 push. 머지 없음.
 - `/cnp --merge`: `/cnp` + `develop` 머지 + `develop` push + 작업 브랜치 삭제 여부 질문.
-- 세부 동작은 `.codex/skills/cnp/SKILL.md` 참조.
+- 세부 동작은 `.agents/skills/cnp/SKILL.md` 참조.
 <!-- ch:managed end -->
 
 <!-- ch:user start -->

@@ -62,7 +62,7 @@ pnpm dlx github:bangmim/codex-harness init
 #### 설치 후 블로그 스킬 1회 세팅
 
 ```bash
-cd ~/.codex/skills/writing-tistory-blog
+cd ~/.agents/skills/writing-tistory-blog
 cp config.example.md config.md
 # config.md 열어서 {{YOUR_TISTORY_HANDLE}}, 카테고리, 톤 예시 등 자기 값으로 채움
 ```
@@ -75,8 +75,8 @@ cp config.example.md config.md
 |---|---|
 | `AGENTS.md` | Codex가 작업 시작 전 읽는 규칙. PLAN.md 범위 안에서만 작업하기, 불확실하면 질문하기, 브랜치 네이밍 규격(`^(feat\|fix\|chore\|test\|docs\|refactor)/[a-z0-9-]+$`), `$cnp` 외 git 명령 금지 등. |
 | `PLAN.md` | 사용자가 작업 전 채우는 플랜(목표 / 범위 / 미확정 / 결정 기록). `{{PROJECT_NAME}}`은 폴더명으로 자동 치환. 한 번 생성 후에는 하네스가 절대 건드리지 않습니다. |
-| `.codex/skills/cnp/SKILL.md` | `$cnp` 명령어 구현. 커밋→현재 브랜치 origin 푸시. `/cnp --merge`면 develop 머지+작업 브랜치 삭제까지. 브랜치명 regex·워크트리 확인·main 직접 커밋 금지 등 안전장치 포함. |
-| `.codex/skills/audit/SKILL.md` | `/audit` 명령어. 현재 프로젝트가 AGENTS.md 규칙(브랜치 네이밍, PLAN.md 완성도, 마커 무결성, `.gitignore` 상태)을 지키는지 점검하고 수정 제안. `/audit --fix` 는 승인된 수정만 적용. 세션 시작 시 PLAN.md가 비어있으면 Codex가 자동으로 "먼저 /audit 돌릴까요?" 제안. |
+| `.agents/skills/cnp/SKILL.md` | `$cnp` 명령어 구현. 커밋→현재 브랜치 origin 푸시. `/cnp --merge`면 develop 머지+작업 브랜치 삭제까지. 브랜치명 regex·워크트리 확인·main 직접 커밋 금지 등 안전장치 포함. |
+| `.agents/skills/audit/SKILL.md` | `/audit` 명령어. 현재 프로젝트가 AGENTS.md 규칙(브랜치 네이밍, PLAN.md 완성도, 마커 무결성, `.gitignore` 상태)을 지키는지 점검하고 수정 제안. `/audit --fix` 는 승인된 수정만 적용. 세션 시작 시 PLAN.md가 비어있으면 Codex가 자동으로 "먼저 /audit 돌릴까요?" 제안. |
 | `.gitignore` | `.backup/` 라인을 중복 없이 추가. 기존 라인은 보존. |
 
 ## 사용
@@ -174,12 +174,12 @@ pnpm dlx github:bangmim/codex-harness update
 
 ## Fork 가이드
 
-> **블로그 스킬은 Fork 없이 커스터마이즈 가능합니다.** 설치 후 `~/.codex/skills/writing-tistory-blog/config.md`에 자기 블로그 URL·카테고리·톤 예시를 채우면 됩니다. 아래 Fork 가이드는 **브랜치 모델이나 `$cnp` 흐름 등 하네스 자체 로직을 바꾸고 싶을 때**만 필요합니다.
+> **블로그 스킬은 Fork 없이 커스터마이즈 가능합니다.** 설치 후 `~/.agents/skills/writing-tistory-blog/config.md`에 자기 블로그 URL·카테고리·톤 예시를 채우면 됩니다. 아래 Fork 가이드는 **브랜치 모델이나 `$cnp` 흐름 등 하네스 자체 로직을 바꾸고 싶을 때**만 필요합니다.
 
 본인 스택에 맞추려면 리포를 fork한 뒤 다음을 수정하세요:
 
 1. **`templates/project/AGENTS.md`의 `ch:managed` 영역** — 브랜치 모델이 다르면 수정.
-2. **`templates/project/.codex/skills/cnp/SKILL.md`** — `$cnp` 세부 흐름(머지 규칙 등) 조정.
+2. **`templates/project/.agents/skills/cnp/SKILL.md`** — `$cnp` 세부 흐름(머지 규칙 등) 조정.
 3. `pnpm build` 후 `dist/` 포함해서 커밋 + push.
 4. 설치 명령 교체:
 
