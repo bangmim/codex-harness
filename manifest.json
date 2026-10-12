@@ -1,0 +1,31 @@
+{
+  "user": [
+    { "source": "templates/user/commands/blog.md",
+      "target": "~/.codex/commands/blog.md",
+      "mode": "whole" },
+    { "source": "templates/user/commands/블로그.md",
+      "target": "~/.codex/commands/블로그.md",
+      "mode": "whole" },
+    { "source": "templates/user/skills/writing-tistory-blog",
+      "target": "~/.codex/skills/writing-tistory-blog",
+      "mode": "whole",
+      "recursive": true }
+  ],
+  "project": [
+    { "source": "templates/project/AGENTS.md",
+      "target": "./AGENTS.md",
+      "mode": "markers" },
+    { "source": "templates/project/PLAN.md",
+      "target": "./PLAN.md",
+      "mode": "init-only",
+      "substitute": { "{{PROJECT_NAME}}": "basename(cwd)" } },
+    { "source": "templates/project/.codex/skills/cnp",
+      "target": "./.codex/skills/cnp",
+      "mode": "whole",
+      "recursive": true },
+    { "source": "templates/project/.codex/skills/audit",
+      "target": "./.codex/skills/audit",
+      "mode": "whole",
+      "recursive": true }
+  ]
+}
