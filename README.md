@@ -1,6 +1,6 @@
 # codex-harness
 
-> Codex 프로젝트에 작업 규칙·플랜 스켈레톤·`/cnp` 스킬·블로그 스킬을 한 커맨드로 설치합니다. 설치 후 Claude를 다시 켜면 하네스가 자동 적용된 상태에서 바로 이어서 작업할 수 있습니다.
+> Codex 프로젝트에 작업 규칙·플랜 스켈레톤·`$cnp` 스킬·블로그 스킬을 한 커맨드로 설치합니다. 설치 후 Codex를 다시 켜면 하네스가 자동 적용된 상태에서 바로 이어서 작업할 수 있습니다.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-brightgreen)
@@ -24,9 +24,9 @@
 
 솔로 개발자가 Codex로 여러 사이드 프로젝트를 돌릴 때, 매 프로젝트마다 반복되는 세팅이 있습니다:
 
-- Claude가 작업 전 읽을 **작업 규칙**(PLAN.md 범위 지키기, 추측 금지, 브랜치 네이밍 등)
+- Codex가 작업 전 읽을 **작업 규칙**(PLAN.md 범위 지키기, 추측 금지, 브랜치 네이밍 등)
 - **PLAN.md 스켈레톤**(목표/범위/미확정/결정 기록)
-- **`/cnp` 스킬**(커밋→푸시→옵션 머지 자동화)
+- **`$cnp` 스킬**(커밋→푸시→옵션 머지 자동화)
 - 블로그 발행용 스킬·커맨드
 
 codex-harness는 이 네 가지를 한 커맨드로 설치하고, 이후 업데이트 때 사용자가 적어놓은 커스텀 영역은 보존합니다.
@@ -73,10 +73,10 @@ cp config.example.md config.md
 
 | 파일 | 설명 |
 |---|---|
-| `AGENTS.md` | Claude가 작업 시작 전 읽는 규칙. PLAN.md 범위 안에서만 작업하기, 불확실하면 질문하기, 브랜치 네이밍 규격(`^(feat\|fix\|chore\|test\|docs\|refactor)/[a-z0-9-]+$`), `/cnp` 외 git 명령 금지 등. |
+| `AGENTS.md` | Codex가 작업 시작 전 읽는 규칙. PLAN.md 범위 안에서만 작업하기, 불확실하면 질문하기, 브랜치 네이밍 규격(`^(feat\|fix\|chore\|test\|docs\|refactor)/[a-z0-9-]+$`), `$cnp` 외 git 명령 금지 등. |
 | `PLAN.md` | 사용자가 작업 전 채우는 플랜(목표 / 범위 / 미확정 / 결정 기록). `{{PROJECT_NAME}}`은 폴더명으로 자동 치환. 한 번 생성 후에는 하네스가 절대 건드리지 않습니다. |
-| `.codex/skills/cnp/SKILL.md` | `/cnp` 명령어 구현. 커밋→현재 브랜치 origin 푸시. `/cnp --merge`면 develop 머지+작업 브랜치 삭제까지. 브랜치명 regex·워크트리 확인·main 직접 커밋 금지 등 안전장치 포함. |
-| `.codex/skills/audit/SKILL.md` | `/audit` 명령어. 현재 프로젝트가 AGENTS.md 규칙(브랜치 네이밍, PLAN.md 완성도, 마커 무결성, `.gitignore` 상태)을 지키는지 점검하고 수정 제안. `/audit --fix` 는 승인된 수정만 적용. 세션 시작 시 PLAN.md가 비어있으면 Claude가 자동으로 "먼저 /audit 돌릴까요?" 제안. |
+| `.codex/skills/cnp/SKILL.md` | `$cnp` 명령어 구현. 커밋→현재 브랜치 origin 푸시. `/cnp --merge`면 develop 머지+작업 브랜치 삭제까지. 브랜치명 regex·워크트리 확인·main 직접 커밋 금지 등 안전장치 포함. |
+| `.codex/skills/audit/SKILL.md` | `/audit` 명령어. 현재 프로젝트가 AGENTS.md 규칙(브랜치 네이밍, PLAN.md 완성도, 마커 무결성, `.gitignore` 상태)을 지키는지 점검하고 수정 제안. `/audit --fix` 는 승인된 수정만 적용. 세션 시작 시 PLAN.md가 비어있으면 Codex가 자동으로 "먼저 /audit 돌릴까요?" 제안. |
 | `.gitignore` | `.backup/` 라인을 중복 없이 추가. 기존 라인은 보존. |
 
 ## 사용
@@ -89,16 +89,16 @@ mkdir ~/code/my-project && cd ~/code/my-project
 pnpm dlx github:bangmim/codex-harness init
 
 # 2. Codex 켜기
-claude
+codex
 ```
 
-Claude 세션에서는 평소처럼 작업하면 됩니다. 첫 작업 전에는 보통 이렇게 시작합니다:
+Codex 세션에서는 평소처럼 작업하면 됩니다. 첫 작업 전에는 보통 이렇게 시작합니다:
 
 ```
 PLAN.md 같이 쓰자. 이 프로젝트는 … (목표 설명)
 ```
 
-Claude가 PLAN.md를 함께 채우고, 작업 브랜치를 만들고, 작업을 진행합니다. 커밋이 필요한 시점에 `/cnp` 또는 `/cnp --merge`를 입력하면 커밋·푸시·(머지)까지 자동으로 진행합니다.
+Codex가 PLAN.md를 함께 채우고, 작업 브랜치를 만들고, 작업을 진행합니다. 커밋이 필요한 시점에 `$cnp` 또는 `/cnp --merge`를 입력하면 커밋·푸시·(머지)까지 자동으로 진행합니다.
 
 ### 플래그
 
@@ -154,7 +154,7 @@ Claude가 PLAN.md를 함께 채우고, 작업 브랜치를 만들고, 작업을 
 <!-- ch:user start -->
 ## 브랜치 모델 override
 - 이 프로젝트는 `main` 단일 브랜치, `develop` 없음.
-- `/cnp --merge` 금지. `/cnp`만 사용.
+- `/cnp --merge` 금지. `$cnp`만 사용.
 <!-- ch:user end -->
 ```
 
@@ -174,12 +174,12 @@ pnpm dlx github:bangmim/codex-harness update
 
 ## Fork 가이드
 
-> **블로그 스킬은 Fork 없이 커스터마이즈 가능합니다.** 설치 후 `~/.codex/skills/writing-tistory-blog/config.md`에 자기 블로그 URL·카테고리·톤 예시를 채우면 됩니다. 아래 Fork 가이드는 **브랜치 모델이나 `/cnp` 흐름 등 하네스 자체 로직을 바꾸고 싶을 때**만 필요합니다.
+> **블로그 스킬은 Fork 없이 커스터마이즈 가능합니다.** 설치 후 `~/.codex/skills/writing-tistory-blog/config.md`에 자기 블로그 URL·카테고리·톤 예시를 채우면 됩니다. 아래 Fork 가이드는 **브랜치 모델이나 `$cnp` 흐름 등 하네스 자체 로직을 바꾸고 싶을 때**만 필요합니다.
 
 본인 스택에 맞추려면 리포를 fork한 뒤 다음을 수정하세요:
 
 1. **`templates/project/AGENTS.md`의 `ch:managed` 영역** — 브랜치 모델이 다르면 수정.
-2. **`templates/project/.codex/skills/cnp/SKILL.md`** — `/cnp` 세부 흐름(머지 규칙 등) 조정.
+2. **`templates/project/.codex/skills/cnp/SKILL.md`** — `$cnp` 세부 흐름(머지 규칙 등) 조정.
 3. `pnpm build` 후 `dist/` 포함해서 커밋 + push.
 4. 설치 명령 교체:
 
@@ -224,7 +224,7 @@ pnpm dlx github:bangmim/codex-harness update
 
 ### 설치만 되고 추가 안내 없이 끝남
 
-맞습니다. 하네스는 설치 후 "✅ 설치 완료"와 백업 위치만 출력하고 끝납니다. Codex를 다시 켜면 AGENTS.md와 `/cnp` 스킬이 자동으로 로드된 상태에서 평소대로 작업하면 됩니다.
+맞습니다. 하네스는 설치 후 "✅ 설치 완료"와 백업 위치만 출력하고 끝납니다. Codex를 다시 켜면 AGENTS.md와 `$cnp` 스킬이 자동으로 로드된 상태에서 평소대로 작업하면 됩니다.
 
 ### Windows
 

@@ -30,11 +30,11 @@
 - 사용자가 작업을 지시하면:
   1. Codex 협업 도구로 subagent를 띄운다 (`isolation: "worktree"`).
   2. subagent는 자체 워크트리 안에서 `develop`을 base로 작업 브랜치를 분기.
-  3. 작업이 끝나면 subagent 안에서 `$codex-cnp` 또는 `$codex-cnp --merge`.
+  3. 작업이 끝나면 subagent 안에서 `$cnp` 또는 `$cnp --merge`.
   4. 머지 완료 후 subagent 종료, 메인 세션은 `develop`에 그대로 머문다.
 
 ## 절대 규칙: /cnp 를 통해서만
-- Codex는 사용자가 `$codex-cnp` 또는 `$codex-cnp --merge`를 명시적으로 입력하기 전에는 절대로 `git commit`, `git push`, `git merge`를 실행하지 않는다.
+- Codex는 사용자가 `$cnp` 또는 `$cnp --merge`를 명시적으로 입력하기 전에는 절대로 `git commit`, `git push`, `git merge`를 실행하지 않는다.
 - `/cnp`: 커밋 → 현재 브랜치 origin에 push. 머지 없음.
 - `/cnp --merge`: `/cnp` + `develop` 머지 + `develop` push + 작업 브랜치 삭제 여부 질문.
 - 세부 동작은 `.codex/skills/cnp/SKILL.md` 참조.
