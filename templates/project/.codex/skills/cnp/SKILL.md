@@ -1,15 +1,15 @@
 ---
 name: cnp
-description: ONLY invoke when the user explicitly types ``$codex-cnp`` or ``$codex-cnp` --merge`. Commits staged+unstaged changes, pushes current branch to origin, and (with --merge) merges into develop. NEVER auto-invoke this skill — commit/push/merge is forbidden without an explicit user command.
+description: ONLY invoke when the user explicitly types ``$cnp`` or ``$cnp` --merge`. Commits staged+unstaged changes, pushes current branch to origin, and (with --merge) merges into develop. NEVER auto-invoke this skill — commit/push/merge is forbidden without an explicit user command.
 ---
 
-# `$codex-cnp` — Commit · Push · (옵션) Merge
+# `$cnp` — Commit · Push · (옵션) Merge
 
 ## 호출 조건 (절대 규칙)
 
-- **오직 사용자가 `$codex-cnp` 또는 `$codex-cnp --merge` 를 명시적으로 입력했을 때만 실행한다.**
+- **오직 사용자가 `$cnp` 또는 `$cnp --merge` 를 명시적으로 입력했을 때만 실행한다.**
 - 작업 완료 후 사용자 요청 없이 자동으로 호출 금지.
-- "커밋해줘", "푸시해줘" 같은 자연어도 사용자가 직접 ``$codex-cnp`` 명령어를 쓰지 않으면 실행하지 않는다. 대신 "`$codex-cnp` 또는 `$codex-cnp` --merge 를 입력해주세요"라고 안내한다.
+- "커밋해줘", "푸시해줘" 같은 자연어도 사용자가 직접 ``$cnp`` 명령어를 쓰지 않으면 실행하지 않는다. 대신 "`$cnp` 또는 `$cnp` --merge 를 입력해주세요"라고 안내한다.
 
 ## 플래그
 
@@ -25,7 +25,7 @@ description: ONLY invoke when the user explicitly types ``$codex-cnp`` or ``$cod
    - `git rev-parse --git-dir` 실행
    - 결과가 `.git` (상대) 또는 `<repo>/.git` (절대, 메인 디렉토리) → 메인 디렉토리
    - 결과가 `<repo>/.git/worktrees/<name>` 형식 → 워크트리
-   - 메인 디렉토리면 중단: "메인 디렉토리에서는 `$codex-cnp` 실행 금지. 워크트리 안에서 실행하세요."
+   - 메인 디렉토리면 중단: "메인 디렉토리에서는 `$cnp` 실행 금지. 워크트리 안에서 실행하세요."
    - 단, 세팅 흐름의 초기 1회 예외는 사용자가 명시적으로 "이번만 예외"로 지시한 경우에 한함.
 5. **브랜치명 정규식 검증:**
    - `git rev-parse --abbrev-ref HEAD` 로 현재 브랜치 획득
@@ -61,14 +61,14 @@ description: ONLY invoke when the user explicitly types ``$codex-cnp`` or ``$cod
 
 ## 실행 흐름
 
-### ``$codex-cnp`` (머지 없음)
+### ``$cnp`` (머지 없음)
 
 1. 변경 파일을 명시적으로 `git add <files>` 로 스테이징 (`.env`, 자격증명류 제외).
 2. 위 규칙대로 커밋.
 3. `git push -u origin <현재 브랜치>` (upstream 없으면 `-u`, 있으면 그냥 `push`).
 4. 사용자에게 커밋 해시, 변경 요약, 원격 브랜치 URL을 보고.
 
-### ``$codex-cnp` --merge`
+### ``$cnp` --merge`
 
 1~3 동일.
 4. `develop` 으로 체크아웃: `git checkout develop && git pull --ff-only`
