@@ -20,13 +20,17 @@ description: ONLY invoke when the user explicitly types ``$cnp`` or ``$cnp` --me
 
 1. `git status`, `git diff` 로 현재 변경 내용을 확인한다.
 2. 변경이 전혀 없으면 "커밋할 변경이 없습니다"로 종료.
-3. 현재 브랜치 이름을 확인한다. `main` 또는 `develop` 위에서 직접 호출된 경우 → 중단하고 "작업 브랜치에서 실행하세요"로 안내.
-4. **현재 작업 디렉토리가 워크트리인지 확인한다.**
+3. 현재 브랜치와 worktree를 확인한다. 현재 위치가 메인 worktree의 `main` 또는 `develop`이면 중단하지 말고 **자동 부트스트랩**한다.
+   - 현재 변경사항을 `git diff --binary`와 untracked 파일 목록으로 보존한다.
+   - `develop`에서 작업 브랜치 이름을 `chore/cnp-YYYYMMDD-HHMMSS` 형식으로 만든다.
+   - 메인 worktree의 형제 경로에 `git worktree add -b <작업브랜치> <형제경로> develop`으로 새 worktree를 만든다.
+   - 보존한 tracked diff와 untracked 파일을 새 worktree로 옮긴다. `.env`, 인증서, 키 파일은 옮기거나 스테이징하지 않는다.
+   - 이후 모든 커밋·푸시·머지 작업은 새 worktree에서 수행한다.
+4. **현재 작업 디렉토리가 워크트리인지 확인한다.** 자동 부트스트랩 후에는 새 worktree인지 다시 확인한다.
    - `git rev-parse --git-dir` 실행
    - 결과가 `.git` (상대) 또는 `<repo>/.git` (절대, 메인 디렉토리) → 메인 디렉토리
    - 결과가 `<repo>/.git/worktrees/<name>` 형식 → 워크트리
-   - 메인 디렉토리면 중단: "메인 디렉토리에서는 `$cnp` 실행 금지. 워크트리 안에서 실행하세요."
-   - 단, 세팅 흐름의 초기 1회 예외는 사용자가 명시적으로 "이번만 예외"로 지시한 경우에 한함.
+   - 메인 디렉토리인데 자동 부트스트랩이 실패하면 중단하고 실패 원인과 보존된 변경 위치를 보고한다.
 5. **브랜치명 정규식 검증:**
    - `git rev-parse --abbrev-ref HEAD` 로 현재 브랜치 획득
    - 정규식 `^(feat|fix|chore|test|docs|refactor)/[a-z0-9-]+$` 매치 확인
@@ -71,8 +75,8 @@ description: ONLY invoke when the user explicitly types ``$cnp`` or ``$cnp` --me
 ### ``$cnp` --merge`
 
 1~3 동일.
-4. `develop` 으로 체크아웃: `git checkout develop && git pull --ff-only`
-5. 작업 브랜치를 머지: `git merge --no-ff <작업브랜치> -m "merge: <작업브랜치> into develop"`
+4. 메인 worktree로 이동해 `develop`이 체크아웃된 상태를 확인한다. 메인 worktree에 변경사항이 있으면 보존 위치를 보고하고 머지를 중단한다.
+5. 메인 worktree에서 `git pull --ff-only` 후 작업 브랜치를 머지한다: `git merge --no-ff <작업브랜치> -m "merge: <작업브랜치> into develop"`
    - 충돌 발생 시 자동 해결 금지. 머지를 중단(`git merge --abort`)하고 사용자에게 상황 보고 후 지시 대기.
 6. `git push origin develop`
 7. **`develop`에 머문다. 작업 브랜치로 복귀 금지.** Codex의 기본 체크아웃 상태는 항상 `develop`.
